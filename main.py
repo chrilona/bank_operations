@@ -1,4 +1,5 @@
 from __future__ import with_statement
+from operator import ne
 from time import strftime
 
 
@@ -49,7 +50,7 @@ class Account:
         timee=strftime("%c")
         for statement in self.statement:
             if statement in self.deposit:
-                print(f"{statement[timee]}__deposit__{statement[self.amount]}")
+              print(f"{statement[timee]}__deposit__{statement[self.amount]}")
         for statement in self.statement:
             if statement in self.withdraw:
                  print(f"{statement[timee]}__withdraw__{statement[self.amount]}")
@@ -60,9 +61,10 @@ class Account:
         self.interest=0.03*self.loan_amount
         self.total_loan=self.loan_amount+self.interest
         total_deposit=0
+        deposits_number=len(self.deposits)
         for statement in self.statement:
             total_deposit+=statement["amount"]
-        if  loan_amount<=(sum(self.deposits)//3) and (len(self.deposits)>10) and loan_amount>100 and self.balance<=0:
+        if  loan_amount<=(sum(self.deposits)//3) and deposits_number>10 and loan_amount>100 and self.balance<=0:
             self.balance+=loan_amount
             print(f"You have been awarded a loan of {loan_amount} your current balance is {self.balance}")
         else:
@@ -85,15 +87,15 @@ class Account:
         if amount<=0:
             return f"You cannot transfer a non-existant amount"
         elif total_amount<=self.balance:
-            self.balance-=total_amount
-            return f"You have transfered {amount} to {receiver} your current balance is {self.balance}"
+            new_balance=self.balance-total_amount
+            return f"You have transfered {amount} to {receiver} your current balance is {new_balance}"
         else:
             return f"Failed  transfer {amount}.Your current balance is {self.balance}"
    
                
     
     def current_balance(self):
-        return self.balance
+        return f"{self.balance} is your current balance"
 
 acc=Account("lona",8976)
 
