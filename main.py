@@ -1,4 +1,5 @@
 from __future__ import with_statement
+from datetime import datetime
 from operator import ne
 from time import strftime
 
@@ -11,51 +12,45 @@ class Account:
         self.deposits=[]
         self.withdraws=[]
         self.statement=[]
+        self.counts=len(self.deposits)
+        self.time_of_trans=datetime.now()
+        self.time_of_trans=strftime("%c")
 
     def deposit(self,amount):
         self.balance+=amount
-        time_of_trans=strftime("%c")
         if amount<=0:
             return f"Deposit must be positive"
         else:
-            self.deposits.append(amount)
-            return f"You deposited {amount} at {time_of_trans} current balance is {self.balance}"
-        
+            narration={"You have deposited":amount,"at":self.time_of_trans,"Your current balance is":self.balance}
+            self.deposits.append(narration)
+            return f"Congratulations,{self.account_name}!!.You deposited {amount} at {self.time_of_trans} current balance is {self.balance}"
     def withdraw(self,amount):
         transaction_fee=100
         self.amount=amount
         total_withdraw=amount+transaction_fee
         new_balance=self.balance-total_withdraw
-        time_of_trans=strftime("%c")
+        narration={"You withdrew":amount,"at":self.time_of_trans,"Your current balance is":self.balance}
+     
         if amount<=0:
             return f"You cannot withdraw zero less than 0"
         elif total_withdraw<self.balance:
-            self.balance-total_withdraw
-            return f"You have succesfully withdrawn {amount}Ksh at {time_of_trans}.Your new balance {new_balance}Ksh"
+            self.balance-=total_withdraw
+            self.withdraws.append(narration)
+            return f"You have succesfully withdrawn {amount}Ksh at {self.time_of_trans}.Your new balance {self.balance}Ksh"
         elif total_withdraw>self.balance:
             return f"Your balance is {self.balance}, you can't withdraw {amount}"
         else:
-            self.withdraws.append(amount)
+            self.withdraws.append(narration)
             return f"Hello {self.account_name} you have withdrawn {amount} your new balance is {self.balance} and your withdrawals are {self.withdrawals}"
 
     def deposit_statement(self):
-        for amount in self.statement:
-            print(f"Your latest deposit is {amount}.Your total deposits are {sum(self.deposit)}")
-    
+          print( self.deposits,end="\n")
     def withdrawal_statement(self):
-        for withdraws in self.statement:
-            print(f"Your most recent withdrawal is {withdraws}Ksh.You have withdrawn {len(self.withdraw)} times")
-
+           print( self.withdraws,end="\n")  
     def full_statements(self):
-        timee=strftime("%c")
-        for statement in self.statement:
-            if statement in self.deposit:
-              print(f"{statement[timee]}__deposit__{statement[self.amount]}")
-        for statement in self.statement:
-            if statement in self.withdraw:
-                 print(f"{statement[timee]}__withdraw__{statement[self.amount]}")
-
-    
+        statement=self.withdraws+self.deposits
+        for state in statement:
+            print(state)
     def  borrow_loans(self,loan_amount):
         self.loan_amount=loan_amount
         self.interest=0.03*self.loan_amount
@@ -92,8 +87,6 @@ class Account:
         else:
             return f"Failed  transfer {amount}.Your current balance is {self.balance}"
    
-               
-    
     def current_balance(self):
         return f"{self.balance} is your current balance"
 
